@@ -214,7 +214,6 @@ describe BlackjackHand do
     end
 
     context "with a pair" do
-
       it 'should return hit against an ace' do
         dealer_card = Card.new(:spade, :ace)
         players_cards = BlackjackHand.new(Card.new(:spade, 3), Card.new(:diamond, 3))
@@ -228,7 +227,15 @@ describe BlackjackHand do
 
         players_cards.get_strategy(dealer_card,@strategy).should eql(:split)
       end
+    end
 
+    context "with surrender" do
+      it 'should return hit against an ace' do
+        dealer_card = Card.new(:spade, :ace)
+        players_cards = BlackjackHand.new(Card.new(:spade, 6), Card.new(:diamond, :ten))
+
+        players_cards.get_strategy(dealer_card,@strategy).should eql(:surrender)
+      end
     end
 
   end

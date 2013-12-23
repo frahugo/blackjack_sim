@@ -1,7 +1,7 @@
 #If nothing is found for example holding an 8 or less. It is assumed you hit on anything
 
---- 
-:9: 
+---
+:9:
   :2: :hit
   :3: :double
   :4: :double
@@ -76,7 +76,7 @@
   :7: :hit
   :8: :hit
   :9: :hit
-  :10: :hit
+  :10: :surrender
   :ace: :hit
 :16:
   :2: :stay
@@ -86,9 +86,9 @@
   :6: :stay
   :7: :hit
   :8: :hit
-  :9: :hit
-  :10: :hit
-  :ace: :hit
+  :9: :surrender
+  :10: :surrender
+  :ace: :surrender
 :17:
   :2: :stay
   :3: :stay

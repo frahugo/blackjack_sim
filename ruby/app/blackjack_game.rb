@@ -15,6 +15,7 @@ class BlackjackGame
     @num_losses = 0
     @num_wins = 0
     @num_pushes = 0
+    @num_surrenders = 0
     @total_winnings = 0
     @highest_winnings = 0
     @lowest_winnings = 0
@@ -34,11 +35,11 @@ class BlackjackGame
   end
 
   def to_s
-    "NumWins: [#{@num_wins}], NumLosses: [#{@num_losses}], NumPushes: [#{@num_pushes}]\nTotalWinnings: [#{@total_winnings}] Min: [#{@lowest_winnings}] Max: [#{@highest_winnings}]\nWin/Loss: [#{@num_wins/@num_losses.to_f}]"
+    "#{@num_wins} wins, #{@num_losses} losses, #{@num_pushes} pushes, #{@num_surrenders} surrenders.\nTotal Winnings: #{@total_winnings} (#{@lowest_winnings},#{@highest_winnings})\nWin/Loss: #{@num_wins/@num_losses.to_f}"
   end
 
   def log message
-    puts message
+    # puts message
   end
 
   def dp dealerHand, playerHand
@@ -95,6 +96,10 @@ class BlackjackGame
     elsif strat == :stay
       log "STAY #{dps dealerHand, playerHand}"
       hand_result = finish_hand(dealerHand, playerHand)
+    elsif strat == :surrender
+      log "SURRENDER! #{dp dealerHand, playerHand}"
+      @num_surrenders = @num_surrenders + 1
+      @total_winnings -= curr_bet_size / 2.0
     else
       raise "Something's wrong #{dp dealerHand, playerHand}"
     end
@@ -118,7 +123,7 @@ class BlackjackGame
 
   def finish_hand dealerHand, playerHand
     #deal to dealer to hard 17
-    until dealerHand.hand_value >= 17 && !dealerHand.is_soft?
+    until dealerHand.hand_value >= 17 # && !dealerHand.is_soft?
       dealerHand << @shoe.deal_card
     end
 
@@ -134,7 +139,7 @@ class BlackjackGame
 end
 
 
-b = BlackjackGame.new 100000, 5, 6
+b = BlackjackGame.new 100000, 5, 8
 
 b.play_game
 
