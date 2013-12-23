@@ -16,9 +16,11 @@ class Shoe
     shuffle!
   end
 
-  def deal_card
-    shuffle! if @shoe.size < @marker
+  def at_end?
+    @shoe.size < @marker
+  end
 
+  def deal_card
     next_card = @shoe.pop
     @dealt_cards << next_card
 
@@ -29,13 +31,14 @@ class Shoe
     @used_cards << @dealt_cards
     @used_cards.flatten!
     @dealt_cards = []
+    shuffle! if at_end?
   end
 
   def shuffle!
     @shoe = @used_cards + @shoe
     @used_cards = []
     @shoe.shuffle!
-    @marker = rand * (@shoe.size / 5)
+    @marker = @shoe.size / 5
   end
 
 end

@@ -35,7 +35,7 @@ class BlackjackGame
   end
 
   def to_s
-    "#{@num_wins} wins, #{@num_losses} losses, #{@num_pushes} pushes, #{@num_surrenders} surrenders.\nTotal Winnings: #{@total_winnings} (#{@lowest_winnings},#{@highest_winnings})\nWin/Loss: #{@num_wins/@num_losses.to_f}"
+    "#{@num_wins} wins, #{@num_losses} losses, #{@num_pushes} pushes, #{@num_surrenders} surrenders.\nTotal Winnings: #{@total_winnings} [#{@lowest_winnings}, #{@highest_winnings}]\nWin/Loss: #{@num_wins/@num_losses.to_f}"
   end
 
   def log message
