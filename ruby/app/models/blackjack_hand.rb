@@ -3,20 +3,20 @@ require File.dirname(__FILE__) + "/" + 'card.rb'
 
 class BlackjackHand
 
-  attr_accessor :hand
+  attr_accessor :cards
 
   def initialize initCard1, initCard2
-    @hand = Array.new
-    @hand << initCard1 << initCard2
+    @cards = Array.new
+    @cards << initCard1 << initCard2
   end
 
   def << card
-    @hand << card
+    @cards << card
     @aces = @non_aces = nil
   end
 
   def is_pair?
-    if @hand.count == 2 && @hand[0].value == @hand[1].value
+    if @cards.count == 2 && @cards[0].value == @cards[1].value
       return true
     else
       return false
@@ -24,57 +24,42 @@ class BlackjackHand
   end
 
   def blackjack?
-    @hand.count == 2 && hand_value == 21
+    @cards.count == 2 && hand_value == 21
   end
 
   def is_soft_17?
-    if hand_value != 17
-      return false
-    else
-      nonAceSum = get_non_ace_sum
+    soft? && hand_value == 17
+  end
 
-      numAces = aces.count
+  def soft?
+    aces && aces.any?
+  end
 
-      ones = numAces - 1
-
-      if (ones > 0)
-         nonAceSum = nonAceSum + ones
-      end
-
-      if (numAces >= 1)
-        return true unless nonAceSum + 11 != 17
-      end
-
-      return false
-    end
+  def hard?
+    !soft?
   end
 
   def hand_value
-    #grab aces
-    nonAceSum = get_non_ace_sum
-    return nonAceSum unless aces.count > 0
-    sum = aces.inject(nonAceSum) { |running_sum,card|
-      if running_sum + 11 <= 21
-        running_sum + 11
-      else
-        running_sum + 1
-      end
-    }
-
-    return sum
+    sum = @cards.inject(0) { |sum, card| sum + card.face_value }
+    sum += 10 if soft? && sum <= 11
+    sum
   end
 
 	def get_strategy_key
 		non_ace_sum = get_non_ace_sum
 
-		if aces.count == 1 && non_ace_sum <= 9
-      return "A#{non_ace_sum}".to_sym
-		elsif non_aces.count == 2
-      return non_ace_sum.to_s.to_sym unless non_aces[0].value == non_aces[1].value
-			return "#{non_aces[0].face_value[0]}#{non_aces[1].face_value[0]}".to_sym
-	  else
-      return hand_value.to_s.to_sym
+    if soft?
+      value = hand_value - 11
+      key = "A#{value}"
+    else
+		  if is_pair?
+        key = @cards.map(&:face_value).join
+  	  else
+        key = hand_value.to_s
+      end
 		end
+
+    key.to_sym
 	end
 
   def get_strategy dealer_show_card, strategy_table
@@ -89,10 +74,10 @@ class BlackjackHand
     if (dealer_show_card.is_ace?)
       dealer_key = :ace
     else
-      dealer_key = dealer_show_card.face_value[0].to_s.to_sym
+      dealer_key = dealer_show_card.face_value.to_s.to_sym
     end
     suggested_play = strat_set[dealer_key]
-    if @hand.count > 2 && suggested_play == :double
+    if @cards.count > 2 && (suggested_play == :double || suggested_play == :surrender)
       suggested_play = :hit
     end
     return suggested_play
@@ -100,7 +85,7 @@ class BlackjackHand
 
   def to_s
     rtrn = ""
-    @hand.each do |currCard|
+    @cards.each do |currCard|
       rtrn = rtrn + currCard.to_s + ","
     end
     return rtrn.chomp(",")
@@ -109,7 +94,7 @@ class BlackjackHand
   private
 
 	def get_non_ace_sum
-		non_aces = @hand.reject { |card| card.value == :ace }
+		non_aces = @cards.reject { |card| card.value == :ace }
     non_aces.inject(0) { |sum, card|
       if (card.value.kind_of? Fixnum)
 		    sum+card.value
@@ -120,11 +105,11 @@ class BlackjackHand
   end
 
 	def aces
-    @aces ||= @hand.reject { |card| card.value != :ace }
+    @aces ||= @cards.reject { |card| card.value != :ace }
 	end
 
 	def non_aces
-	  @non_aces ||= @hand.reject { |card| card.value == :ace }
+	  @non_aces ||= @cards.reject { |card| card.value == :ace }
 	end
 
 end

@@ -47,14 +47,14 @@ class BlackjackGame
   end
 
   def dps dealerHand, playerHand
-    "Playerhand #{playerHand}=#{playerHand.hand_value}  Dealerhand: #{dealerHand.hand[0]}"
+    "Playerhand #{playerHand}=#{playerHand.hand_value}  Dealerhand: #{dealerHand.cards[0]}"
   end
 
   private
 
   def play_hand dealerHand, playerHand, curr_bet_size
     log "Playing hand... #{dps dealerHand, playerHand}"
-    show_card = dealerHand.hand[0]
+    show_card = dealerHand.cards[0]
 
     if (playerHand.hand_value > 21)
       log "BUSTED! #{dp dealerHand, playerHand}"
@@ -82,8 +82,8 @@ class BlackjackGame
     hand_result = nil
     if (strat == :split)
       log "SPLITTING #{dps dealerHand, playerHand}"
-      play_hand(dealerHand, BlackjackHand.new(playerHand.hand[0], @shoe.deal_card), curr_bet_size)
-      play_hand(dealerHand, BlackjackHand.new(playerHand.hand[1], @shoe.deal_card), curr_bet_size)
+      play_hand(dealerHand, BlackjackHand.new(playerHand.cards[0], @shoe.deal_card), curr_bet_size)
+      play_hand(dealerHand, BlackjackHand.new(playerHand.cards[1], @shoe.deal_card), curr_bet_size)
     elsif strat == :double
       log "DOUBLING"
       playerHand << @shoe.deal_card
@@ -140,7 +140,7 @@ end
 
 
 10.times do
-  b = BlackjackGame.new 1000, 5, 6
+  b = BlackjackGame.new 10000, 5, 6
   b.play_game
   puts b.to_s
 end

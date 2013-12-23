@@ -68,11 +68,11 @@ describe BlackjackHand do
 
 
     blackjack_hand = BlackjackHand.new(card_one,card_two)
-    hand = blackjack_hand.hand
+    cards = blackjack_hand.cards
 
-    hand.index(card_one).should_not be_nil
-    hand.index(card_two).should_not be_nil
-    hand.index(card_three).should be_nil
+    cards.index(card_one).should_not be_nil
+    cards.index(card_two).should_not be_nil
+    cards.index(card_three).should be_nil
 
   end
 
@@ -95,14 +95,22 @@ describe BlackjackHand do
       @five = Card.new :spade,5
       @five2 = Card.new :diamond,5
       @ace = Card.new :diamond,:ace
+      @ace2 = Card.new :spade,:ace
       @four = Card.new :diamond,4
+      @three = Card.new :diamond,3
       @queen1 = Card.new :diamond, :queen
       @queen2 = Card.new :spade, :queen
+      @jack = Card.new :spade, :jack
+    end
+
+    it 'should return the correct key given two queens' do
+      hand = BlackjackHand.new @queen1, @queen2
+      hand.get_strategy_key.to_s.should eql("1010")
     end
 
     it 'should return the correct key given two face cards' do
-      hand = BlackjackHand.new @queen1, @queen2
-      hand.get_strategy_key.to_s.should eql("1010")
+      hand = BlackjackHand.new @queen1, @jack
+      hand.get_strategy_key.to_s.should eql("20")
     end
 
     it 'should return the correct key given an ace hand' do
@@ -121,6 +129,12 @@ describe BlackjackHand do
       hand.get_strategy_key.to_s.should eql("A9")
 		end
 
+    it 'should return the correct key given two aces with two face cards that add under 10' do
+      hand = BlackjackHand.new @five, @ace
+      hand << @ace2
+      hand << @three
+      hand.get_strategy_key.to_s.should eql("A9")
+    end
 
 	end
 
@@ -232,7 +246,7 @@ describe BlackjackHand do
     context "with surrender" do
       it 'should return hit against an ace' do
         dealer_card = Card.new(:spade, :ace)
-        players_cards = BlackjackHand.new(Card.new(:spade, 6), Card.new(:diamond, :ten))
+        players_cards = BlackjackHand.new(Card.new(:spade, 6), Card.new(:diamond, 10))
 
         players_cards.get_strategy(dealer_card,@strategy).should eql(:surrender)
       end
