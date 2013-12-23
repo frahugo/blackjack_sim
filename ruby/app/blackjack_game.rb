@@ -105,7 +105,7 @@ class BlackjackGame
       dealerHand << @shoe.deal_card
     end
 
-    if playerHand.hand_value > dealerHand.hand_value
+    if playerHand.hand_value > dealerHand.hand_value || dealerHand.hand_value > 21
       return :win
     elsif playerHand.hand_value == dealerHand.hand_value
       return :push
