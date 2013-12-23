@@ -9,7 +9,7 @@ class BlackjackHand
     @hand = Array.new
     @hand << initCard1 << initCard2
   end
- 
+
   def << rhs
     @hand << rhs
   end
@@ -25,13 +25,17 @@ class BlackjackHand
       return false
     end
   end
- 
+
+  def blackjack?
+    @hand.count == 2 && hand_value == 21
+  end
+
   def is_soft?
     if hand_value != 17
       return false
     else
-      nonAceSum = get_non_ace_sum     
-      
+      nonAceSum = get_non_ace_sum
+
       numAces = aces.count
 
       ones = numAces - 1
@@ -39,13 +43,13 @@ class BlackjackHand
       if (ones > 0)
          nonAceSum = nonAceSum + ones
       end
- 
+
       if (numAces >= 1)
         return true unless nonAceSum + 11 != 17
       end
 
       return false
-    end 
+    end
   end
 
   def hand_value
@@ -89,10 +93,10 @@ class BlackjackHand
       dealer_key = :ace
     else
       dealer_key = dealer_show_card.face_value[0].to_s.to_sym
-    end 
+    end
     suggested_play = strat_set[dealer_key]
     if @hand.count > 2 && suggested_play == :double
-      suggested_play = :hit 
+      suggested_play = :hit
     end
     return suggested_play
   end
@@ -101,13 +105,14 @@ class BlackjackHand
     rtrn = ""
     @hand.each do |currCard|
       rtrn = rtrn + currCard.to_s + ","
-    end 
+    end
     return rtrn.chomp(",")
   end
-	
+
   private
+
 	def get_non_ace_sum
-		non_aces = @hand.reject { |card| card.value == :ace }			
+		non_aces = @hand.reject { |card| card.value == :ace }
     non_aces.inject(0) { |sum, card|
       if (card.value.kind_of? Fixnum)
 		    sum+card.value
