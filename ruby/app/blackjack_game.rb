@@ -26,7 +26,7 @@ class BlackjackGame
       dealerHand = BlackjackHand.new @shoe.deal_card, @shoe.deal_card
       playerHand = BlackjackHand.new @shoe.deal_card, @shoe.deal_card
 
-      play_hand(dealerHand, playerHand,@bet_size)
+      play_hand(dealerHand, playerHand, @bet_size)
       log "Winnings: #{@total_winnings}"
       log "------------------------------------------------------------"
 
@@ -35,7 +35,7 @@ class BlackjackGame
   end
 
   def to_s
-    "#{@num_wins} wins, #{@num_losses} losses, #{@num_pushes} pushes, #{@num_surrenders} surrenders.\nTotal Winnings: #{@total_winnings} [#{@lowest_winnings}, #{@highest_winnings}]\nWin/Loss: #{@num_wins/@num_losses.to_f}"
+    "#{@num_wins} wins, #{@num_losses} losses, #{@num_pushes} pushes, #{@num_surrenders} surrenders.\nTotal Winnings: #{@total_winnings} [#{@lowest_winnings}, #{@highest_winnings}] Win/Loss: #{@num_wins/@num_losses.to_f}"
   end
 
   def log message
@@ -123,7 +123,7 @@ class BlackjackGame
 
   def finish_hand dealerHand, playerHand
     #deal to dealer to hard 17
-    until dealerHand.hand_value >= 17 # && !dealerHand.is_soft?
+    until dealerHand.hand_value >= 17 # && !dealerHand.is_soft_17?
       dealerHand << @shoe.deal_card
     end
 
@@ -139,8 +139,8 @@ class BlackjackGame
 end
 
 
-b = BlackjackGame.new 100000, 5, 8
-
-b.play_game
-
-puts b.to_s
+10.times do
+  b = BlackjackGame.new 1000, 5, 6
+  b.play_game
+  puts b.to_s
+end

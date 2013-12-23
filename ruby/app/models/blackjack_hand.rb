@@ -10,12 +10,9 @@ class BlackjackHand
     @hand << initCard1 << initCard2
   end
 
-  def << rhs
-    @hand << rhs
-  end
-
-  def accept_card card
+  def << card
     @hand << card
+    @aces = @non_aces = nil
   end
 
   def is_pair?
@@ -30,7 +27,7 @@ class BlackjackHand
     @hand.count == 2 && hand_value == 21
   end
 
-  def is_soft?
+  def is_soft_17?
     if hand_value != 17
       return false
     else
@@ -123,11 +120,11 @@ class BlackjackHand
   end
 
 	def aces
-    @hand.reject { |card| card.value != :ace }
+    @aces ||= @hand.reject { |card| card.value != :ace }
 	end
 
 	def non_aces
-	  @hand.reject { |card| card.value == :ace }
+	  @non_aces ||= @hand.reject { |card| card.value == :ace }
 	end
 
 end

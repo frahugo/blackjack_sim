@@ -2,7 +2,7 @@ require File.dirname(__FILE__) + "/" + '../../app/models/blackjack_hand.rb'
 
 describe BlackjackHand do
 
-  context 'is_soft?' do
+  context 'is_soft_17?' do
 
     before(:each) do
       @ace = Card.new(:diamond,:ace)
@@ -16,23 +16,23 @@ describe BlackjackHand do
 
     it 'should handle under 17 correctly' do
       hand = BlackjackHand.new(@ace,@two)
-      hand.is_soft?.should be_false
+      hand.is_soft_17?.should be_false
     end
 
     it 'should handle over 17 correctly' do
       hand = BlackjackHand.new(@ace,@seven)
-      hand.is_soft?.should be_false
+      hand.is_soft_17?.should be_false
     end
 
     it 'should handle soft 17 correctly with one ace' do
       hand = BlackjackHand.new(@ace,@six)
-      hand.is_soft?.should be_true
+      hand.is_soft_17?.should be_true
     end
 
     it 'should handle soft 17 with multiple aces' do
       hand = BlackjackHand.new(@ace,@five)
       hand << @ace2
-      hand.is_soft?.should be_true
+      hand.is_soft_17?.should be_true
     end
   end
 
